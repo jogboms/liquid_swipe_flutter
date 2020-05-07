@@ -8,6 +8,7 @@ import 'package:liquid_swipe/Provider/iamariderprovider.dart';
 import 'package:provider/provider.dart';
 
 export 'package:liquid_swipe/Helpers/Helpers.dart';
+export 'package:liquid_swipe/Provider/iamariderprovider.dart';
 
 final key = new GlobalKey<_LiquidSwipe>();
 
@@ -40,9 +41,7 @@ class LiquidSwipe extends StatefulWidget {
     this.currentUpdateTypeCallback,
   })  : assert(pages != null),
         assert(fullTransitionValue != null),
-        assert(initialPage != null &&
-            initialPage >= 0 &&
-            initialPage < pages.length),
+        assert(initialPage != null && initialPage >= 0 && initialPage < pages.length),
         assert(positionSlideIcon >= -1 && positionSlideIcon <= 1),
         super(key: key);
 
@@ -61,47 +60,40 @@ class _LiquidSwipe extends State<LiquidSwipe> with TickerProviderStateMixin {
     List<Container> pages = widget.pages;
     return ChangeNotifierProvider<IAmARiderProvider>(
       create: (BuildContext context) {
-        return IAmARiderProvider(
-            widget.initialPage,
-            widget.enableLoop,
-            pages.length,
-            this,
-            widget.positionSlideIcon,
-            widget.onPageChangeCallback,
-            widget.currentUpdateTypeCallback);
+        return IAmARiderProvider(widget.initialPage, widget.enableLoop, pages.length, this, widget.positionSlideIcon,
+            widget.onPageChangeCallback, widget.currentUpdateTypeCallback);
       },
       child: Consumer(
-        builder: (BuildContext context, IAmARiderProvider model, _) =>
-            Stack(
-              children: <Widget>[
-                CustomPage(
-                  pageView: model.slideDirection == SlideDirection.leftToRight
-                      ? pages[model.activePageIndex]
-                      : pages[model.nextPageIndex],
-                ),
-                //Pages
-                PageReveal(
-                  //next page reveal
-                  revealPercent: model.slidePercentHor,
-                  child: CustomPage(
-                    pageView: model.slideDirection == SlideDirection.leftToRight
-                        ? pages[model.nextPageIndex]
-                        : pages[model.activePageIndex],
-                  ),
-                  slideDirection: model.slideDirection,
-                  iconPosition: widget.positionSlideIcon,
-                  waveType: widget.waveType,
-                  vertReveal: model.slidePercentVer,
-                ),
-                PageDragger(
-                  //Used for gesture control
-                  fullTransitionPX: widget.fullTransitionValue,
-                  enableSlideIcon: widget.enableSlideIcon,
-                  slideIconWidget: widget.slideIconWidget,
-                  iconPosition: widget.positionSlideIcon,
-                ), //PageDragger
-              ], //Widget//Stack
+        builder: (BuildContext context, IAmARiderProvider model, _) => Stack(
+          children: <Widget>[
+            CustomPage(
+              pageView: model.slideDirection == SlideDirection.leftToRight
+                  ? pages[model.activePageIndex]
+                  : pages[model.nextPageIndex],
             ),
+            //Pages
+            PageReveal(
+              //next page reveal
+              revealPercent: model.slidePercentHor,
+              child: CustomPage(
+                pageView: model.slideDirection == SlideDirection.leftToRight
+                    ? pages[model.nextPageIndex]
+                    : pages[model.activePageIndex],
+              ),
+              slideDirection: model.slideDirection,
+              iconPosition: widget.positionSlideIcon,
+              waveType: widget.waveType,
+              vertReveal: model.slidePercentVer,
+            ),
+            PageDragger(
+              //Used for gesture control
+              fullTransitionPX: widget.fullTransitionValue,
+              enableSlideIcon: widget.enableSlideIcon,
+              slideIconWidget: widget.slideIconWidget,
+              iconPosition: widget.positionSlideIcon,
+            ), //PageDragger
+          ], //Widget//Stack
+        ),
       ),
     ); //Scaffold
   }
